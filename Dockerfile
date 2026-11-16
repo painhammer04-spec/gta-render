@@ -7,7 +7,7 @@ RUN apt-get update -qq && apt-get install -y -qq unzip curl xz-utils fonts-liber
     && rm -rf /var/lib/apt/lists/*
 RUN curl -s https://rclone.org/install.sh | bash && rclone version | head -1
 # torch = laptop versions (cu128 needs host driver >= 570; podrun asks RunPod for CUDA 12.8+ hosts only)
-RUN pip install -q --no-cache-dir torch==2.11.0 torchvision==0.26.0 --index-url https://download.pytorch.org/whl/cu128
+RUN pip uninstall -y torchaudio && pip install -q --no-cache-dir torch==2.11.0 torchvision==0.26.0 --index-url https://download.pytorch.org/whl/cu128
 RUN pip install -q --no-cache-dir openai-whisper==20250625 open_clip_torch==3.3.0 transformers pillow numpy requests soundfile
 # weights baked (parallel jobs would race on the download)
 RUN python3 -c "import whisper; whisper.load_model('small.en', device='cpu')" \
